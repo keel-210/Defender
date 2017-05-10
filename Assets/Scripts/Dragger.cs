@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Dragger : MonoBehaviour
 {
-    [SerializeField]
     int ID;
     Transform tra;
     bool Moving;
@@ -12,16 +11,18 @@ public class Dragger : MonoBehaviour
     //ForTouchInput
     void Update()
     {
-        if(Input.touchCount > 0)
+        if(Input.touchCount == 1)
         {
+            Touch t = Input.touches[0];
             if (!Moving)
             {
-                if (Input.touches[ID].phase == TouchPhase.Began)
+                if (t.phase == TouchPhase.Began)
                 {
-                    var ray = Camera.main.ScreenPointToRay(Input.touches[ID].position);
+                    var ray = Camera.main.ScreenPointToRay(t.position);
                     RaycastHit hit;
                     if (Physics.Raycast(ray, out hit))
                     {
+                        ID = t.fingerId;
                         Moving = true;
                         tra = hit.transform;
                     }
@@ -29,19 +30,19 @@ public class Dragger : MonoBehaviour
             }
             else
             {
-                if (Input.touches[ID].phase == TouchPhase.Moved)
-                {
-                    if (Moving)
-                    {
-                        var pos = Camera.main.ScreenToWorldPoint(Input.touches[ID].position);
-                        pos = new Vector3(pos.x, pos.y, 0);
-                        tra.position = pos;
-                    }
-                }
-                if (Input.touches[ID].phase == TouchPhase.Ended)
+                if (t.phase == TouchPhase.Ended || t.fingerId != ID)
                 {
                     Moving = false;
                     tra = null;
+                }
+                if (t.phase == TouchPhase.Moved)
+                {
+                    if (Moving)
+                    {
+                        var pos = Camera.main.ScreenToWorldPoint(t.position);
+                        pos = new Vector3(pos.x, pos.y, 0);
+                        tra.position = pos;
+                    }
                 }
             }
         }
