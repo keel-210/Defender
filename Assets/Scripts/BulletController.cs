@@ -5,25 +5,33 @@ using System.Linq;
 
 public class BulletController : MonoBehaviour
 {
-    public float Attack { get; set; }
     [SerializeField]
     float Speed;
     [SerializeField, Tag]
-    string EnemyTag;
+    string Tag;
+    [SerializeField]
+    float RotLerp, VeloLerp;
     Rigidbody2D rb;
     Transform Target;
     void Start()
     {
-        Target = GameObject.FindGameObjectsWithTag(EnemyTag)
+        Target = GameObject.FindGameObjectsWithTag(Tag)
             .OrderBy(g => Vector3.Magnitude(g.transform.position - transform.position))
             .First().transform;
         rb = GetComponent<Rigidbody2D>();
+        StartCoroutine(this.DelayMethod(10, () =>
+        {
+            Destroy(gameObject);
+        }));
     }
 
     void FixedUpdate()
     {
-        Vector3 dir = Vector3.Normalize(Target.position - transform.position);
-        rb.rotation = Mathf.Lerp(rb.rotation, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg, 0.1f);
-        rb.velocity = transform.right * Speed;
+        if (Target)
+        {
+            Vector3 dir = Vector3.Normalize(Target.position - transform.position);
+            rb.rotation = Mathf.Lerp(rb.rotation, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg, RotLerp);
+            rb.velocity = Vector2.Lerp(rb.velocity, dir * Speed, VeloLerp);
+        }
     }
 }

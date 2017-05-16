@@ -9,6 +9,14 @@ public class Health : MonoBehaviour
     public float health
     {
         get { return _health; }
-        set { _health = value; }
+        set
+        {
+            _health = Mathf.Min(MaxHealth, Mathf.Max(0, value));
+        }
+    }
+    float MaxHealth;
+    void Start()
+    {
+        MaxHealth = _health;
     }
 }

@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Dragger : MonoBehaviour
 {
     int ID;
     Transform tra;
     bool Moving;
+    TurretState ts;
     
     //ForTouchInput
     void Update()
@@ -25,6 +27,12 @@ public class Dragger : MonoBehaviour
                         ID = t.fingerId;
                         Moving = true;
                         tra = hit.transform;
+                        ts = hit.collider.GetComponent<TurretState>();
+                        ts.Pick();
+                        if (EventSystem.current.IsPointerOverGameObject(0))
+                        {
+                            ts.UnableSet();
+                        }
                     }
                 }
             }
@@ -34,6 +42,7 @@ public class Dragger : MonoBehaviour
                 {
                     Moving = false;
                     tra = null;
+                    ts.Release();
                 }
                 if (t.phase == TouchPhase.Moved)
                 {
@@ -42,6 +51,14 @@ public class Dragger : MonoBehaviour
                         var pos = Camera.main.ScreenToWorldPoint(t.position);
                         pos = new Vector3(pos.x, pos.y, 0);
                         tra.position = pos;
+                        if (EventSystem.current.IsPointerOverGameObject(0))
+                        {
+                            ts.UnableSet();
+                        }
+                        else if(!ts.TurretCollision)
+                        {
+                            ts.EnableSet();
+                        }
                     }
                 }
             }
