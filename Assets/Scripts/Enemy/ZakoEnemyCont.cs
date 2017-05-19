@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class ZakoEnemyCont : EnemyController
 {
-    [SerializeField]
-    float _Speed;
-    public float Speed
-    {
-        get { return _Speed; }
-        set { _Speed = value; }
-    }
     [SerializeField, Tag]
     string PlayerTag;
     [SerializeField]

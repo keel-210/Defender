@@ -13,6 +13,13 @@ public class EnemyController : MonoBehaviour
         get { return _health; }
         set { _health = value; }
     }
+    [SerializeField]
+    float _Speed;
+    public float Speed
+    {
+        get { return _Speed; }
+        set { _Speed = value; }
+    }
     void Awake()
     {
         health = GetComponent<Health>();
