@@ -5,50 +5,45 @@ using System;
 
 public class WaveController : MonoBehaviour
 {
-    public List<WaveAndTime> WAT = new List<WaveAndTime>();
-    List<PrefabListEmitter> Waves = new List<PrefabListEmitter>();
     public int WaveNumber { get; set; }
 
-    PrefabListEmitter CurrentWave;
-    WaveAndTime CurrentObj;
-    float Timer;
+    [SerializeField]
+    UnityEngine.Object Zako;
+    public Transform WaveObj;
+    PrefabListEmitter Wave;
     bool Activate;
-    int MaxWave;
+    int MaxWave, NextWave;
+    float IntervalTime, WaveFinishTime;
     void Start()
     {
         WaveNumber = 0;
-        foreach (WaveAndTime x in WAT)
-        {
-            Waves.Add(x.PrefabList.GetComponent<PrefabListEmitter>());
-        }
-        MaxWave = WAT.Count - 1;
+        Wave = WaveObj.GetComponent<PrefabListEmitter>();
     }
 
     void FixedUpdate()
     {
         if (!Activate)
         {
-            CurrentWave = Waves[WaveNumber];
-            CurrentObj = WAT[WaveNumber];
-            CurrentWave.Set();
+            Wave.Set();
+            Activate = true;
+            WaveFinishTime = 0;
+        }
+        WaveFinishTime += Time.deltaTime;
+        Wave.Emit();
+        if (Wave.list.Count == 0 && WaveObj.childCount == 0)
+        {
+            WaveNumber++;
+            WaveMaker(WaveNumber, WaveFinishTime);
             Activate = true;
         }
-        CurrentWave.Emit();
-        if (CurrentWave.list.Count == 0 && CurrentObj.PrefabList.transform.childCount == 0)
+    }
+    void WaveMaker(int WaveNum, float FinishTime)
+    {
+        PrefabListEmitter.EmitPrefab prefab = new PrefabListEmitter.EmitPrefab { Time = 0.1f, Prefab = Zako, Pos = new Vector3(10, -2, 0) };
+        for (int i = 0; i < WaveNum; i++)
         {
-            Timer += Time.deltaTime;
-            if (Timer > CurrentObj.Time && WaveNumber < MaxWave)
-            {
-                WaveNumber++;
-                Activate = false;
-                Timer = 0;
-            }
+            Wave.list.Add(prefab);
         }
     }
-    [Serializable]
-    public class WaveAndTime
-    {
-        public GameObject PrefabList;
-        public float Time;
-    }
+
 }

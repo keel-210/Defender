@@ -6,19 +6,19 @@ using UnityEngine.UI;
 public class CircleSlider : MonoBehaviour
 {
     [SerializeField]
-    Image img;
+    Image Handle;
     [SerializeField]
     Text tex;
+    [SerializeField]
+    float MaxValue;
+    public float value;
 
-    Vector2 UIpos;
     float deg;
     float Old_angle;
     void Start()
     {
-        UIpos = Camera.main.WorldToScreenPoint(transform.position);
-        //UIpos = new Vector2(UIpos.x, UIpos.y);
-        Debug.Log(UIpos);
-        deg = 0;
+        deg = value/360f;
+        tex.text = ((int)(360 * deg)).ToString();
     }
 
     public void Drag()
@@ -32,14 +32,20 @@ public class CircleSlider : MonoBehaviour
 
                 
                 Vector2 localPos; // Mouse position  
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(transform as RectTransform, Input.mousePosition, ray.eventCamera, out localPos);
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(Handle.transform as RectTransform, t.position, ray.eventCamera, out localPos);
 
                 // local pos is the mouse position.
                 float angle = (Mathf.Atan2(-localPos.y, localPos.x) * 180f / Mathf.PI + 180f) / 360f;
                 float dir = angle - Old_angle;
+                if (Mathf.Abs(dir) > 0.1f)
+                {
+                    dir = 0;
+                }
                 Old_angle = angle;
-                deg += dir * 360;
-                tex.text = deg.ToString();
+                deg = Mathf.Clamp(deg + dir, 0, 1);
+                Handle.fillAmount = deg;
+                value = deg * MaxValue;
+                tex.text = ((int)(value)).ToString();
             }
         }
     }

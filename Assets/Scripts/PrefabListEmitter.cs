@@ -34,6 +34,7 @@ public class PrefabListEmitter : MonoBehaviour
     [Serializable]
     public class EmitPrefab
     {
+        [Range(0,20)]
         public float Time;
         public UnityEngine.Object Prefab;
         public Vector3 Pos;
