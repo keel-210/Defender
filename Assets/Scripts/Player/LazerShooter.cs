@@ -22,7 +22,7 @@ public class LazerShooter : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Target)
+        if (Target && TargetGO.activeInHierarchy)
         {
             if (Vector3.Magnitude(Target.position - transform.position) < Range)
             {
@@ -51,6 +51,7 @@ public class LazerShooter : MonoBehaviour
         else
         {
             TargetGO = objs
+            .Where(o => o.activeInHierarchy)
             .OrderBy(g => Vector3.Magnitude(g.transform.position - transform.position))
             .First();
             Target = TargetGO.transform;

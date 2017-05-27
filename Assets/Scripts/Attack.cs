@@ -15,6 +15,12 @@ public class Attack : MonoBehaviour
     string Tag;
     [SerializeField]
     bool DontDestroy;
+
+    Health health;
+    private void Start()
+    {
+        health = GetComponent<Health>();
+    }
     void OnTriggerEnter2D(Collider2D obj)
     {
         if (obj.tag == Tag)
@@ -22,7 +28,7 @@ public class Attack : MonoBehaviour
             obj.GetComponent<Health>().health -= Damage;
             if (!DontDestroy)
             {
-                Destroy(gameObject);
+                health.health = 0;
             }
         }
     }

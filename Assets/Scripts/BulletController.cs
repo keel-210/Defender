@@ -13,6 +13,7 @@ public class BulletController : MonoBehaviour
     float RotLerp, VeloLerp;
     Rigidbody2D rb;
     Transform Target;
+    Health health;
     void Start()
     {
         Target = GameObject.FindGameObjectsWithTag(Tag)
@@ -23,6 +24,7 @@ public class BulletController : MonoBehaviour
         {
             Destroy(gameObject);
         }));
+        health = GetComponent<Health>();
     }
 
     void FixedUpdate()
@@ -32,6 +34,10 @@ public class BulletController : MonoBehaviour
             Vector3 dir = Vector3.Normalize(Target.position - transform.position);
             rb.rotation = Mathf.Lerp(rb.rotation, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg, RotLerp);
             rb.velocity = Vector2.Lerp(rb.velocity, dir * Speed, VeloLerp);
+        }
+        if(health.health <= 0)
+        {
+            Destroy(gameObject);
         }
     }
 }

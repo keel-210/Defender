@@ -1,47 +1,47 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class WaveController : MonoBehaviour
 {
     public int WaveNumber { get; set; }
 
-    [SerializeField]
-    UnityEngine.Object Zako;
     public Transform WaveObj;
     PrefabListEmitter Wave;
+    PrefabListEmitter.EmitPrefab prefab = new PrefabListEmitter.EmitPrefab();
     bool Activate;
-    int MaxWave, NextWave;
-    float IntervalTime, WaveFinishTime;
+    int MaxEnemyNum = 15;
     void Start()
     {
         WaveNumber = 0;
         Wave = WaveObj.GetComponent<PrefabListEmitter>();
+        Activate = true;
     }
 
     void FixedUpdate()
     {
-        if (!Activate)
+        if (Activate)
         {
-            Wave.Set();
-            Activate = true;
-            WaveFinishTime = 0;
+            Wave.Emit();
         }
-        WaveFinishTime += Time.deltaTime;
-        Wave.Emit();
+
         if (Wave.list.Count == 0 && WaveObj.childCount == 0)
         {
             WaveNumber++;
-            WaveMaker(WaveNumber, WaveFinishTime);
+            WaveMaker(WaveNumber);
             Activate = true;
         }
     }
-    void WaveMaker(int WaveNum, float FinishTime)
+    void WaveMaker(int WaveNum)
     {
-        PrefabListEmitter.EmitPrefab prefab = new PrefabListEmitter.EmitPrefab { Time = 0.1f, Prefab = Zako, Pos = new Vector3(10, -2, 0) };
+        if(WaveNum > MaxEnemyNum)
+        {
+            WaveNum = MaxEnemyNum;
+        }
         for (int i = 0; i < WaveNum; i++)
         {
+            prefab.Time = 0.1f;
+            prefab.Pos = 10 * new Vector3(Random.value - 0.5f, Random.value - 0.5f, 0);
             Wave.list.Add(prefab);
         }
     }

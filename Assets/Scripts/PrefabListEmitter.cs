@@ -8,35 +8,30 @@ using UnityEditorInternal;
 public class PrefabListEmitter : MonoBehaviour
 {
     public List<EmitPrefab> list = new List<EmitPrefab>();
-
-    bool activate;
+    [SerializeField]
+    Pool Pool;
     float Timer;
-    public void Set()
-    {
-        activate = true;
-    }
+
     public void Emit()
     {
-        if (activate)
+        Timer += Time.deltaTime;
+        for (int i = 0; i < list.Count; i++)
         {
-            Timer += Time.deltaTime;
-            for(int i = 0;i < list.Count; i++)
+            if (list[i].Time < Timer)
             {
-                if (list[i].Time < Timer)
-                {
-                    GameObject obj = (GameObject)Instantiate(list[i].Prefab, list[i].Pos, Quaternion.Euler(list[i].Rot));
-                    obj.transform.parent = transform;
-                    list.Remove(list[i]);
-                }
+                GameObject obj = Pool.Request();
+                obj.transform.position = list[i].Pos;
+                obj.transform.rotation = Quaternion.Euler(list[i].Rot);
+                obj.transform.parent = transform;
+                list.Remove(list[i]);
             }
         }
     }
     [Serializable]
     public class EmitPrefab
     {
-        [Range(0,20)]
+        [Range(0, 20)]
         public float Time;
-        public UnityEngine.Object Prefab;
         public Vector3 Pos;
         public Vector3 Rot;
     }
@@ -81,22 +76,16 @@ public class TutorialMessageAttribute : PropertyDrawer
         {
             position.height = EditorGUIUtility.singleLineHeight;
             var ele1 = property.FindPropertyRelative("Time");
-            var ele2 = property.FindPropertyRelative("Prefab");
             var ele3 = property.FindPropertyRelative("Pos");
             var ele4 = property.FindPropertyRelative("Rot");
             var ele1Rect = new Rect(position)
             {
                 height = position.height
             };
-            var ele2Rect = new Rect(position)
-            {
-                height = position.height,
-                y = ele1Rect.y + EditorGUIUtility.singleLineHeight + 2
-            };
             var ele3Rect = new Rect(position)
             {
                 height = position.height * 2,
-                y = ele2Rect.y + EditorGUIUtility.singleLineHeight + 2
+                y = ele1Rect.y + EditorGUIUtility.singleLineHeight + 2
             };
             var ele4Rect = new Rect(position)
             {
@@ -104,7 +93,6 @@ public class TutorialMessageAttribute : PropertyDrawer
                 y = ele3Rect.y + EditorGUIUtility.singleLineHeight + 2
             };
             EditorGUI.PropertyField(ele1Rect, ele1);
-            EditorGUI.PropertyField(ele2Rect, ele2);
             EditorGUI.PropertyField(ele3Rect, ele3);
             EditorGUI.PropertyField(ele4Rect, ele4);
         }

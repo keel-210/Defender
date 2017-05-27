@@ -7,6 +7,8 @@ public class Pool : MonoBehaviour
 {
     [SerializeField]
     Object prefab;
+    [SerializeField]
+    Transform tra;
 
     List<GameObject> list = new List<GameObject>();
     public GameObject Request()
@@ -18,6 +20,7 @@ public class Pool : MonoBehaviour
             if (!g.activeInHierarchy)
             {
                 g.SetActive(true);
+                g.transform.parent = tra;
                 returnObj = g;
                 InitFlg = true;
                 break;
@@ -33,6 +36,7 @@ public class Pool : MonoBehaviour
     }
     public void DestroyRequest(GameObject go)
     {
+        go.transform.parent = transform;
         go.SetActive(false);
     }
 }
