@@ -10,40 +10,29 @@ public class TurretArea : MonoBehaviour
     Object Burret;
     [SerializeField]
     float InitTime;
-    [SerializeField]
-    bool Area4Ray;
 
-    GameObject Obj4Ray;
+    Pool pool;
     int EnemyNum;
     float Timer;
-    bool RayFlg = true;
     void Start()
     {
-
+        pool = GameObject.Find("Pools").transform.Find(Burret.name).gameObject.GetComponent<Pool>();
     }
     void FixedUpdate()
     {
         if (EnemyNum > 0)
         {
             Timer += Time.deltaTime;
-            if (Timer > InitTime && !Area4Ray)
+            if (Timer > InitTime)
             {
-                Instantiate(Burret, transform.position, Quaternion.identity);
+                GameObject obj = pool.Request(transform);
+                obj.transform.position = transform.position;
                 Timer = 0;
-            }
-            if (Area4Ray && RayFlg)
-            {
-                Obj4Ray = (GameObject)Instantiate(Burret, transform.position, Quaternion.identity);
-                RayFlg = false;
             }
         }
         else
         {
             Timer = 0;
-            if (Area4Ray)
-            {
-                RayFlg = true;
-            }
         }
     }
     void OnTriggerEnter2D(Collider2D obj)

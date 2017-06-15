@@ -11,14 +11,17 @@ public class ScaleController : MonoBehaviour
     {
         tra = transform;
     }
-
+    private void OnDisable()
+    {
+        tra.localScale = new Vector3(1, 1, 1);
+    }
     void FixedUpdate()
     {
         Vector3 scale = new Vector3(tra.localScale.x + Offset, tra.localScale.y + Offset, tra.localScale.z + Offset);
         tra.localScale = scale;
         if(tra.localScale.x > MaxRange)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

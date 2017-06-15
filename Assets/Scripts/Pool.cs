@@ -7,11 +7,9 @@ public class Pool : MonoBehaviour
 {
     [SerializeField]
     Object prefab;
-    [SerializeField]
-    Transform tra;
-
+    
     List<GameObject> list = new List<GameObject>();
-    public GameObject Request()
+    public GameObject Request(Transform tra)
     {
         bool InitFlg = false;
         GameObject returnObj = null;
@@ -38,5 +36,15 @@ public class Pool : MonoBehaviour
     {
         go.transform.parent = transform;
         go.SetActive(false);
+    }
+    private void Update()
+    {
+        foreach (GameObject g in list)
+        {
+            if (!g.activeInHierarchy)
+            {
+                g.transform.parent = transform;
+            }
+        }
     }
 }

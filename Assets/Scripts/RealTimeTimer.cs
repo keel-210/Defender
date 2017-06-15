@@ -25,6 +25,10 @@ public class RealTimeTimer : MonoBehaviour
         StartTime += Time.realtimeSinceStartup - StopTime;
         active = true;
     }
+    public void Reset()
+    {
+        Start();
+    }
     void Start()
     {
         StartTime = Time.realtimeSinceStartup;

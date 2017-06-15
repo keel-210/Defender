@@ -19,7 +19,7 @@ public class PrefabListEmitter : MonoBehaviour
         {
             if (list[i].Time < Timer)
             {
-                GameObject obj = Pool.Request();
+                GameObject obj = Pool.Request(transform);
                 obj.transform.position = list[i].Pos;
                 obj.transform.rotation = Quaternion.Euler(list[i].Rot);
                 obj.transform.parent = transform;

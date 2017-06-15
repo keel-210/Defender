@@ -7,19 +7,22 @@ public class LazerShooter : MonoBehaviour
 {
     [SerializeField, Tag]
     string Tag;
-    [SerializeField]
+
     float Range;
     public GameObject TargetGO;
     Transform Target;
     Health health;
     LineRenderer lr;
     float Damage;
-    void Start()
+    void Awake()
     {
         EnemyFind();
         lr = GetComponent<LineRenderer>();
     }
-
+    private void OnEnable()
+    {
+        lr.enabled = false;
+    }
     void FixedUpdate()
     {
         if (Target && TargetGO.activeInHierarchy)
@@ -27,9 +30,9 @@ public class LazerShooter : MonoBehaviour
             if (Vector3.Magnitude(Target.position - transform.position) < Range)
             {
                 health.health -= Damage;
-                lr.enabled = true;
                 lr.SetPosition(0, transform.position);
                 lr.SetPosition(1, Target.position);
+                lr.enabled = true;
             }
             else
             {
@@ -44,11 +47,7 @@ public class LazerShooter : MonoBehaviour
     void EnemyFind()
     {
         GameObject[] objs = GameObject.FindGameObjectsWithTag(Tag);
-        if (objs.Count() == 0)
-        {
-            Destroy(gameObject);
-        }
-        else
+        if (objs.Count() != 0)
         {
             TargetGO = objs
             .Where(o => o.activeInHierarchy)

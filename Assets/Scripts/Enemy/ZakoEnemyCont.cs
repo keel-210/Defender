@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ZakoEnemyCont : EnemyController
 {
-    Pool Zako;
     Transform core;
     Rigidbody2D rb;
     [SerializeField]
@@ -13,7 +12,6 @@ public class ZakoEnemyCont : EnemyController
     {
         rb = GetComponent<Rigidbody2D>();
         core = GameObject.Find("Core").transform;
-        Zako = GameObject.Find("Pools").transform.Find("ZakoPool").GetComponent<Pool>();
 	}
     private void OnDisable()
     {
@@ -30,7 +28,7 @@ public class ZakoEnemyCont : EnemyController
         else
         {
             rb.velocity = new Vector2(1000, 1000);
-            Zako.DestroyRequest(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

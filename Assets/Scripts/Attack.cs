@@ -14,7 +14,7 @@ public class Attack : MonoBehaviour
     [SerializeField, Tag]
     string Tag;
     [SerializeField]
-    bool DontDestroy;
+    bool DontDestroy, CollisionUnable;
 
     Health health;
     private void Start()
@@ -23,12 +23,15 @@ public class Attack : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D obj)
     {
-        if (obj.tag == Tag)
+        if (!CollisionUnable)
         {
-            obj.GetComponent<Health>().health -= Damage;
-            if (!DontDestroy)
+            if (obj.tag == Tag)
             {
-                health.health = 0;
+                obj.GetComponent<Health>().health -= Damage;
+                if (!DontDestroy)
+                {
+                    health.health = 0;
+                }
             }
         }
     }
